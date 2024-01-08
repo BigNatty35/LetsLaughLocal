@@ -1,25 +1,29 @@
 import { prisma } from "@/db";
+import { Rubik_Dirt } from 'next/font/google'
 import Link from "next/link";
+
+const doodle = Rubik_Dirt({
+  subsets: ['latin'],
+  weight: "400"
+})
 
 function getUsers() {
   return prisma.user.findMany();
 }
-export default async function Home() {
-  // await prisma.user.create({data: {  username: "Mohdi", email: "pup@gmail", password: "pizza"}})  
-  const users = await getUsers();
-  return (
-    <div className="flex flex-col">
-      <h1>User Registration</h1>
-      <div>
-        <form action="" className="flex flex-col">
-          <label htmlFor="">username</label>
-          <input type="text" placeholder="username" />
-          <label htmlFor="">password</label>
-          <input type="password" placeholder="password" />
-          <label htmlFor="">email</label>
-          <input type="text" placeholder="email" />
-        </form>
 
+function getEvents() {
+  return prisma.event.findMany();
+}
+
+export default async function HomePage() {
+  return (
+    <div className="flex flex-col justify-center items-center m-0 h-screen bg-[url(./images/erin-with-M2i7bo69hzc-unsplash.jpg)] w-full bg-cover bg-center p-24 bg-opacity-25">
+      <div className="mb-20">
+        <h1 className={`${doodle.className} text-white text-8xl`}>Lets Laugh Local!</h1>
+      </div>
+      <div className="flex text-center space-x-8">
+        <Link  className={`${doodle.className} bg-customGold hover:bg-customRed hover:text-customGold text-customRed font-bold text-4xl py-4 px-8 rounded-full w-80 border-white border-8`} href="./shows">Shows</Link>
+        <Link className={` ${doodle.className} bg-customGold hover:bg-customRed hover:text-customGold text-customRed font-bold text-4xl py-4 px-8 w-80 border-white border-8 rounded-full`}href="./openmic">Open Mics</Link>
       </div>
     </div>
   )

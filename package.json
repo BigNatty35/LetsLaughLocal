@@ -9,6 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fullcalendar/daygrid": "^6.1.10",
+    "@fullcalendar/interaction": "^6.1.10",
+    "@fullcalendar/react": "^6.1.10",
+    "@fullcalendar/timegrid": "^6.1.10",
+    "@next/font": "^14.0.4",
     "@prisma/client": "^5.7.1",
     "jsonwebtoken": "^9.0.2",
     "next": "14.0.4",
