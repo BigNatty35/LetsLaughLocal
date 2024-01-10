@@ -1,6 +1,7 @@
 import { prisma } from "@/db";
 import { Rubik_Dirt } from 'next/font/google'
 import Link from "next/link";
+import UpcomingShows from "./components/UpcomingShows";
 
 const doodle = Rubik_Dirt({
   subsets: ['latin'],
@@ -17,7 +18,8 @@ function getEvents() {
 
 export default async function HomePage() {
   return (
-    <div className="flex flex-col justify-center items-center m-0 h-screen bg-[url(./images/erin-with-M2i7bo69hzc-unsplash.jpg)] w-full bg-cover bg-center p-24 bg-opacity-25">
+    <>
+    <div className="flex flex-col justify-center items-center m-0 m-h-screen mb-10">
       <div className="mb-20">
         <h1 className={`${doodle.className} text-white text-8xl`}>Lets Laugh Local!</h1>
       </div>
@@ -26,5 +28,7 @@ export default async function HomePage() {
         <Link className={` ${doodle.className} bg-customGold hover:bg-customRed hover:text-customGold text-customRed font-bold text-4xl py-4 px-8 w-80 border-white border-8 rounded-full`}href="./openmic">Open Mics</Link>
       </div>
     </div>
+    <UpcomingShows/>
+    </>
   )
 }

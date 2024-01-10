@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-customRed">{children}</body>
+      <body className="bg-customRed bg-[url(./images/erin-with-M2i7bo69hzc-unsplash.jpg)] w-full bg-cover bg-center p-24 bg-opacity-25">{children}</body>
     </html>
   )
 }

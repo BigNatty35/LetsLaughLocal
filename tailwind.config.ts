@@ -16,6 +16,9 @@ const config: Config = {
       colors: {
         customRed: '#882425',
         customGold: '#EADF8F'
+      },
+      maxHeight: {
+        '1/2': '50%',
       }
     },
   },
