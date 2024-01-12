@@ -47,32 +47,44 @@ export default async function OpenMic() {
   // Pass each mic to a micComponent, and store in corisponding object eg:
   // map through weekDays Object, pass each key to a <WeekDay day={} ...value/>
   
+  // Tap Yard, 3rd wed, signup 8:30, start: 9pm, 1610 automotive way, raleigh, wednesday
+  // Comedy Worx
+  // Komona 
+  // hoppy house
+  // 
 
-  // const startTime = new Date()
-  // startTime.setHours(20, 30, 0, 0)
+  const signupTime = new Date()
+  const startTime = new Date()
+  startTime.setHours(19, 30, 0, 0)
+  signupTime.setHours(18, 0, 0, 0)
 
   // await prisma.openMic.create({
   //   data: {
-  //     title: "Vault Comedy Open Mic",
-  //     address: "518 W South St",
-  //     signupForm: "https://docs.google.com/forms/d/1C5YJPjlTgF7D60z56LBShzT70uoS8lB2ANX3WJl60AQ/viewform?edit_requested=true",
+  //     title: "Tap Yard",
+  //     address: "1610 automotive way",
+  //     signupTime: signupTime,
   //     startTime: startTime,
-  //     city: "Raleigh",
-  //     info: "4min sets, list capped at 25. final list sent out friday morning (*signing up doesn't guarantee a spot*)",
-  //     frequency: "bi-weekly",
+  //     city: "Morrisville",
+  //     info: "5min sets",
+  //     frequency: "weekly",
   //     day: "Friday"
   //   }
   // })
 
   // await prisma.openMic.update({
-  //   where: { id: 8},
+  //   where: { id: 4},
   //   data: {
-  //     signupForm: "https://docs.google.com/forms/d/1eRn-2LFzCpyAiK_BDJEv183GLlgqOcgpDZWZMBCiQOE/viewform?edit_requested=true",
+  //       title: "House of Art",
+  //     address: "306 E Hargett St",
+  //     signupTime: signupTime,
+  //     startTime: startTime
   //   }
   // })
 
 
-  
+
+  // await prisma.event.deleteMany({})
+
   const weekDays: DayOfWeekSchedule = {}
 
 
@@ -119,13 +131,13 @@ export default async function OpenMic() {
   return (
     <>
       <div className="flex flex-col justify-center items-center m-0 m-h-screen mb-10">
-        <div className="text-6xl text-white border text-center bg-black px-5 py-8 mb-5">
+        <div className="text-6xl text-white border text-center bg-black px-5 py-8 mb-5 rounded">
           <p className={`${doodle.className}`}>Open Mic List</p>
         </div>
         <div>
           {orderedDays.map(day => (
             <div key={day}>
-                <div className="p-4 inline-block bg-black">
+                <div className="p-4 text-center bg-black rounded">
                   <h1 className={`${doodle.className} text-white text-4xl`}>{day}</h1>
                 </div>
                 <ul>
@@ -133,13 +145,13 @@ export default async function OpenMic() {
                     
                     return (
                       <li key={openMic.id}>
-                        <div className="bg-slate-300 mb-3 mt-3 px-12 py-6 text-center">
-                          <strong>{openMic.title}</strong>
-                          <p>Address: {openMic.address}</p>
-                          <p>Sign up: {signUp(openMic)}</p>
-                          <p>Start: {getTime(openMic.startTime)}</p>
-                          <p>Frequency: {openMic.frequency}</p>
-                          <p className="bg-white text-black p-2">Info: {openMic.info}</p>
+                        <div className="bg-slate-300 mb-3 mt-3 px-12 py-6 text-center rounded">
+                          <strong className="underline text-2xl">{openMic.title}</strong>
+                          <p className="mb-2 mt-2">Address: {openMic.address}</p>
+                          <p className="mb-2">Sign up: {signUp(openMic)}</p>
+                          <p className="mb-2">Start: {getTime(openMic.startTime)}</p>
+                          <p className="mb-2">Frequency: {openMic.frequency}</p>
+                          <p className="bg-white text-black p-2 rounded">Info: {openMic.info}</p>
                         </div>
                       </li>
                     )

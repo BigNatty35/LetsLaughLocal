@@ -31,7 +31,7 @@ model Event {
   date DateTime
   description String
   location String
-  images String[]
+  image_url String
   approvalStatus ApprovalStatus
   userID Int
   user User @relation(fields: [userID], references:[id])
