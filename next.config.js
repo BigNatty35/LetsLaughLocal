@@ -11,3 +11,8 @@ const nextConfig = {
 }
 
 module.exports = nextConfig
+
+// Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+// Culpa earum molestias libero sed, aspernatur cumque, 
+// laborum voluptas nisi natus fugit maxime officiis sit 
+// ab ea recusandae tenetur debitis sequi ratione.

@@ -53,10 +53,10 @@ export default async function OpenMic() {
   // hoppy house
   // 
 
-  const signupTime = new Date()
-  const startTime = new Date()
-  startTime.setHours(19, 30, 0, 0)
-  signupTime.setHours(18, 0, 0, 0)
+  // const signupTime = new Date()
+  // const startTime = new Date()
+  // startTime.setHours(19, 30, 0, 0)
+  // signupTime.setHours(18, 0, 0, 0)
 
   // await prisma.openMic.create({
   //   data: {
