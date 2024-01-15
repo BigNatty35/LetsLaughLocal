@@ -12,11 +12,14 @@ function getUsers() {
   return prisma.user.findMany();
 }
 
-function getEvents() {
-  return prisma.event.findMany();
+async function getEvents() {
+  const events = await prisma.event.findMany();
+  console.log(events);
+  return events
 }
 
 export default async function HomePage() {
+  getEvents();
   return (
     <>
     <div className="flex flex-col justify-center items-center m-0 m-h-screen mb-10">
@@ -28,7 +31,10 @@ export default async function HomePage() {
         <Link className={` ${doodle.className} bg-customGold hover:bg-customRed hover:text-customGold text-customRed font-bold text-4xl py-4 px-8 w-80 border-white border-8 rounded-full`}href="./openmic">Open Mics</Link>
       </div>
     </div>
+    <div className="bg-black">
+    <h1 className={`${doodle.className} text-white text-3xl bg-black text-center p-4`}>Upcoming Shows</h1>
     <UpcomingShows/>
+    </div>
     </>
   )
 }

@@ -29,10 +29,15 @@ model Event {
   id Int @id @default(autoincrement())
   title String
   date DateTime
+  doors_open String
+  start_time String
   description String
-  location String
-  images String[]
+  venue_name String
+  address String
+  image_url String
   approvalStatus ApprovalStatus
+  ticket_link String
+  ticket_price String
   userID Int
   user User @relation(fields: [userID], references:[id])
   createdAt DateTime @default(now())
