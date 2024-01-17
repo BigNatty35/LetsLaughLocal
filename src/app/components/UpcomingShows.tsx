@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { prisma } from "@/db";
 import ShowCard from './ShowCard';
 import EventForm from './EventForm';
@@ -23,9 +24,11 @@ interface Event {
 }
 
 export default async function UpcomingShows() {
- 
- 
-  const events = await prisma.event.findMany({})
+  // grab the first 8 events to display
+  const events = await prisma.event.findMany({ 
+    take: 8, 
+    orderBy: { date: 'asc' } 
+  })
   
   const addTimeStringToDate = (date: Date, timeString: String) => {
     const [hours, minutes] = timeString.split(":").map(Number);
@@ -49,6 +52,9 @@ export default async function UpcomingShows() {
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
        {orderedEvents.map(event => <ShowCard key={event.id} event={event} />)}
+      </div>
+      <div>
+        <Link className='text-white text-2xl' href={"../shows"}>View More Shows</Link>
       </div>
     </>
   )

@@ -9,7 +9,7 @@ export default function ShowsPage() {
   return (
     <div>
       <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        plugins={[dayGridPlugin,timeGridPlugin, interactionPlugin]}
         initialView={'dayGridMonth'}
         />
     </div>
