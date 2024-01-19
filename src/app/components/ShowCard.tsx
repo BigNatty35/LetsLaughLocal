@@ -1,23 +1,24 @@
 import Image from "next/image";
+import Link from 'next/link';
 
 enum ApprovalStatus {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED'
 }
-// interface Event {
-//   title: string,
-//   date: Date,
-//   image_url: string,
-//   ticket_price: string,
-//   ticket_link: string,
-//   doors_open: string,
-//   start_time: string,
-//   appovalStatus: ApprovalStatus,
-//   address: string,
-//   description: string,
-//   venue_name: string
-// }
+interface Event {
+  title: string,
+  date: Date,
+  image_url: string,
+  ticket_price: string,
+  ticket_link: string,
+  doors_open: string,
+  start_time: string,
+  appovalStatus: ApprovalStatus,
+  address: string,
+  description: string,
+  venue_name: string
+}
 
 export default function ShowCard({ event }) {
   if (!event) {
@@ -37,15 +38,18 @@ export default function ShowCard({ event }) {
   }
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-md">
-      <Image src={`${event.image_url}`} alt="Event 1" width={500} height={500}/>
-      <div className="p-4">
-        <h2 className="text-xl font-semibold mb-2">{event.title}</h2>
-        <p className="text-gray-600 mb-2">{formattedDate}</p>
-        <p className="text-gray-600 mb-2">Start: {getTime(event.date)}</p>
-
+    <>
+      <div className="bg-white rounded-lg overflow-hidden shadow-md">
+        <Link key={event.id} href={`/shows/${event.id}`}>
+          <Image src={`${event.image_url}`} alt="Event 1" width={500} height={500}/>
+          <div className="p-4">
+            <h2 className="text-xl font-semibold mb-2">{event.title}</h2>
+            <p className="text-gray-600 mb-2">{formattedDate}</p>
+            <p className="text-gray-600 mb-2">Start: {getTime(event.date)}</p>
+          </div>
+        </Link>
         <a href={`${event.ticket_link}`} className="text-blue-500 hover:underline">Get Tickets (${event.ticket_price})</a>
       </div>
-    </div>
+    </>
   )
 }
