@@ -24,17 +24,16 @@ interface Event {
 
 
 export default async function ShowDetailsPage({ params }) {
-
-
+ 
   const addTimeStringToDate = (date: Date, timeString: String) => {
     const [hours, minutes] = timeString.split(":").map(Number);
-
+    
     date.setHours(hours)
     date.setMinutes(minutes)
     return date
   }
-
-
+  
+  
 
   const getTime = (date: Date): string => {
     const hours: number = date.getHours();
