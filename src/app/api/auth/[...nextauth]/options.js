@@ -14,7 +14,7 @@ export const options = {
         }
       },
       clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
+      clientSecret: process.env.GOOGLE_Secret,
     })
   ],
   callbacks: {
