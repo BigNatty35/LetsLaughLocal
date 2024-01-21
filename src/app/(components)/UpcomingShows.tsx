@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { prisma } from "@/db";
 import ShowCard from './ShowCard';
 import EventForm from './EventForm';
-import { Rubik_Dirt } from 'next/font/google'
+import { Bangers } from 'next/font/google'
 
-const doodle = Rubik_Dirt({
+const doodle = Bangers({
   subsets: ['latin'],
   weight: "400"
 })
