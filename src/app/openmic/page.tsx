@@ -1,9 +1,9 @@
 import { prisma } from "@/db";
 import Link from "next/link";
-import { Rubik_Dirt } from 'next/font/google'
+import { Bangers } from 'next/font/google'
 import { ReactElement } from "react";
 
-const doodle = Rubik_Dirt({
+const doodle = Bangers({
   subsets: ['latin'],
   weight: "400"
 })
@@ -88,7 +88,7 @@ export default async function OpenMic() {
   const weekDays: DayOfWeekSchedule = {}
 
 
-  const getDayOrder = (day: string) => {
+  const getDayOrder = (day: string): number => {
     const order: DayOrder = {
       "Monday": 1,
       "Tuesday": 2,
@@ -111,7 +111,7 @@ export default async function OpenMic() {
     weekDays[day].push(mic)
   })
 
-  const orderedDays = Object.keys(weekDays).sort((a,b) => getDayOrder(a) - getDayOrder(b))
+  const orderedDays: string[] = Object.keys(weekDays).sort((a,b) => getDayOrder(a) - getDayOrder(b))
 
   const getTime = (date: Date): string => {
     const hours: number = date.getHours();
@@ -148,6 +148,7 @@ export default async function OpenMic() {
                         <div className="bg-slate-300 mb-3 mt-3 px-12 py-6 text-center rounded">
                           <strong className="underline text-2xl">{openMic.title}</strong>
                           <p className="mb-2 mt-2">Address: {openMic.address}</p>
+                          <p className="mb-2 mt-2">City: {openMic.city}</p>
                           <p className="mb-2">Sign up: {signUp(openMic)}</p>
                           <p className="mb-2">Start: {getTime(openMic.startTime)}</p>
                           <p className="mb-2">Frequency: {openMic.frequency}</p>

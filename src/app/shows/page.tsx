@@ -1,14 +1,14 @@
 import { prisma } from "@/db";
-import { Rubik_Dirt } from 'next/font/google'
+import { Bangers } from 'next/font/google'
 import Link from 'next/link';
-import ShowCard from "../components/ShowCard";
+import ShowCard from "../(components)/ShowCard";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
 
-const doodle = Rubik_Dirt({
+const doodle = Bangers({
   subsets: ['latin'],
   weight: "400"
 })
@@ -17,6 +17,16 @@ export default async function ShowsPage() {
   const events = await prisma.event.findMany({ 
    orderBy: { date: 'asc' } 
   })
+
+  // let user = await prisma.user.create({
+  //   data: {
+  //     username: "Big Nickle",
+  //     email: "NickNick@hotmail.com",
+  //     password: "123abc",
+  //   }
+  // })
+
+  // console.log(user);
 
   const addTimeStringToDate = (date: Date, timeString: String) => {
     const [hours, minutes] = timeString.split(":").map(Number);

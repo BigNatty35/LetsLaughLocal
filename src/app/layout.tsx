@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link';
-import { Rubik_Dirt } from 'next/font/google'
-const doodle = Rubik_Dirt({
+import Nav from './(components)/Nav';
+import { Bangers } from 'next/font/google'
+const doodle = Bangers({
   subsets: ['latin'],
   weight: "400"
 })
@@ -20,17 +21,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-customRed bg-[url(https://comedyshowbucket.s3.amazonaws.com/erin-with-M2i7bo69hzc-unsplash.jpg)] w-full bg-cover bg-center p-24 bg-opacity-25">
-        <div className="flex flex-col justify-center items-center m-0 m-h-screen mb-10">
-          <div className="mb-8">
-            <h1 className={`${doodle.className} text-white text-8xl`}>Lets Laugh Local!</h1>
-          </div>
-          <div className="flex text-center space-x-8">
-            <Link  className={`${doodle.className} bg-customGold hover:bg-customRed hover:text-customGold text-customRed font-bold text-4xl py-4 px-8 rounded-full w-80 border-white border-8`} href="/shows">Shows</Link>
-            <Link className={` ${doodle.className} bg-customGold hover:bg-customRed hover:text-customGold text-customRed font-bold text-4xl py-4 px-8 w-80 border-white border-8 rounded-full`}href="/openmic">Open Mics</Link>
-          </div>
+      <body className="bg-customRed w-full bg-cover bg-center p-24 ">
+        <Nav/>
+        <div className='m-2'>
+          {children}
         </div>
-        {children}
       </body>
     </html>
   )

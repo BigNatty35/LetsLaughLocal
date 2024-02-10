@@ -1,8 +1,8 @@
 import { prisma } from "@/db";
 import { revalidatePath } from "next/cache";
+import { createEvent } from "../actions";
 
-
-export default async function EventForm() {
+export default function EventForm() {
 
   // save the start time as string,
   // save doors_open as string
@@ -38,35 +38,35 @@ export default async function EventForm() {
   //   console.log('Form submitted:', formData);
   // };
 
-  const addEvent = async (formData: FormData) => {
-    "use server"
-      const date = formData.get("date");
-      console.log(date)
-       await prisma.event.create({
-      data: {
-        title: formData.get("title") as string,
-        date: new Date(formData.get("date") as unknown as Date),
-        doors_open: formData.get("doors_open") as string,
-        start_time: formData.get("start_time") as string,
-        description: formData.get("description") as string,
-        venue_name: formData.get("venue_name") as string,
-        address: formData.get("address") as string,
-        image_url: "https://comedyshowbucket.s3.amazonaws.com/4357C8E7-4635-44C5-8DD8-9B446450414E.JPG",
-        ticket_link: formData.get("ticket_link") as string,
-        ticket_price: formData.get("ticket_price") as string,
-        approvalStatus: 'PENDING',
-        userID: 1
-      }
-    })
-    revalidatePath("/")
-  }
+  // const addEvent = async (formData: FormData) => {
+  //   "use server"
+  //     const date = formData.get("date");
+  //     console.log(date)
+  //      await prisma.event.create({
+  //     data: {
+  //       title: formData.get("title") as string,
+  //       date: new Date(formData.get("date") as unknown as Date),
+  //       doors_open: formData.get("doors_open") as string,
+  //       start_time: formData.get("start_time") as string,
+  //       description: formData.get("description") as string,
+  //       venue_name: formData.get("venue_name") as string,
+  //       address: formData.get("address") as string,
+  //       image_url: "https://comedyshowbucket.s3.amazonaws.com/4357C8E7-4635-44C5-8DD8-9B446450414E.JPG",
+  //       ticket_link: formData.get("ticket_link") as string,
+  //       ticket_price: formData.get("ticket_price") as string,
+  //       approvalStatus: 'PENDING',
+  //       userID: 1
+  //     }
+  //   })
+  //   revalidatePath("/")
+  // }
 
 
 
   // }
 
   return (
-    <form action={addEvent} className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
+    <form action={createEvent} className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
       <label className="block mb-2">
         Title:
         <input type="text" name="title"   className="form-input border p-2 ml-4" />

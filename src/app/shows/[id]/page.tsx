@@ -23,9 +23,8 @@ interface Event {
 }
 
 
-export default async function ShowDetailsPage({ params }) {
- 
-  const addTimeStringToDate = (date: Date, timeString: String) => {
+export default async function ShowDetailsPage({ params }: { params: { id: string }}) {
+  const addTimeStringToDate = (date: Date, timeString: String): Date => {
     const [hours, minutes] = timeString.split(":").map(Number);
     
     date.setHours(hours)
@@ -43,9 +42,9 @@ export default async function ShowDetailsPage({ params }) {
     return `${formattedHours.toString()}:${minutes.toString()}${ampm}`
   }
 
-  const event = await (await prisma.event.findMany({where: {id: parseInt(params.id)}})).pop()
+  const event = (await prisma.event.findMany({where: {id: parseInt(params.id)}})).pop()
   const formattedDate = event?.date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  const doorsOpenTime = addTimeStringToDate(new Date(), event?.doors_open || "")
+  const doorsOpenTime: Date = addTimeStringToDate(new Date(), event?.doors_open || "")
 
   console.log(event)
   if (event) {

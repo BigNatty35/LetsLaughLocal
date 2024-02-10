@@ -1,24 +1,6 @@
 import Image from "next/image";
 import Link from 'next/link';
-
-enum ApprovalStatus {
-  PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED'
-}
-interface Event {
-  title: string,
-  date: Date,
-  image_url: string,
-  ticket_price: string,
-  ticket_link: string,
-  doors_open: string,
-  start_time: string,
-  appovalStatus: ApprovalStatus,
-  address: string,
-  description: string,
-  venue_name: string
-}
+import { Event } from '../types';
 
 export default function ShowCard({ event }) {
   if (!event) {

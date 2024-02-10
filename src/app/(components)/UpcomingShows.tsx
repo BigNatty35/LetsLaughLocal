@@ -2,32 +2,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { prisma } from "@/db";
 import ShowCard from './ShowCard';
-import EventForm from './EventForm';
-import { Rubik_Dirt } from 'next/font/google'
+import { Bangers } from 'next/font/google'
 
-const doodle = Rubik_Dirt({
+const doodle = Bangers({
   subsets: ['latin'],
   weight: "400"
 })
-
-enum ApprovalStatus {
-  PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED'
-}
-interface Event {
-  title: string,
-  date: Date,
-  image_url: string,
-  ticket_price: string,
-  ticket_link: string,
-  doors_open: string,
-  start_time: string,
-  appovalStatus: ApprovalStatus,
-  address: string,
-  description: string,
-  venue_name: string
-}
 
 export default async function UpcomingShows() {
   // grab the first 8 events to display
