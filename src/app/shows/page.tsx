@@ -18,6 +18,16 @@ export default async function ShowsPage() {
    orderBy: { date: 'asc' } 
   })
 
+  // let user = await prisma.user.create({
+  //   data: {
+  //     username: "Big Nickle",
+  //     email: "NickNick@hotmail.com",
+  //     password: "123abc",
+  //   }
+  // })
+
+  // console.log(user);
+
   const addTimeStringToDate = (date: Date, timeString: String) => {
     const [hours, minutes] = timeString.split(":").map(Number);
 

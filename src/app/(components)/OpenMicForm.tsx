@@ -1,16 +1,16 @@
 import { prisma } from "@/db";
 import { revalidatePath } from "next/cache";
-import { createEvent } from "../actions";
+import { createOpenMic } from "../actions";
 
-export default function EventForm() {
-
+export default function OpenMicForm() {
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   // save the start time as string,
   // save doors_open as string
   // migrate 
   //  we are saving them as strings (e.g. "HH:mm AM/PM")
   // when we receive object from DB, we will just display the string, 
   // if we want to order, we will convert to date object. 
-
+// date.toLocaleDateString('en-us', { weekday: 'long'})
   // const [formData, setFormData] = useState({
   //   title: '',
   //   date: '',
@@ -66,54 +66,47 @@ export default function EventForm() {
   // }
 
   return (
-    <form action={createEvent} className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
+    <form action={createOpenMic} className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
       <label className="block mb-2">
         Title:
-        <input type="text" name="title"   className="form-input border p-2 ml-4" />
-      </label>
-
-      <label className="block mb-2">
-        Date:
-        <input type="date" name="date"   className="form-input border p-2 ml-4" />
-      </label>
-
-      <label className="block mb-2">
-        Start Time:
-        <input type="time" name="start_time"   className="form-input border p-2 ml-4" />
-      </label>
-      <label className="block mb-2">
-        Doors Open:
-        <input type="time" name="doors_open"   className="form-input border p-2 ml-4" />
-      </label>
-
-      <label className="block mb-2">
-        Description:
-        <textarea name="description"   className="form-textarea"></textarea>
-      </label>
-
-      <label className="block mb-2">
-        Venue Name:
-        <input type="text" name="venue_name"   className="form-input border p-2 ml-4" />
+        <input type="text" name="title" className="form-input border p-2 ml-4" />
       </label>
 
       <label className="block mb-2">
         Address:
-        <input type="text" name="address"   className="form-input border p-2 ml-4" />
+        <input type="text" name="address" className="form-input border p-2 ml-4" />
       </label>
 
       <label className="block mb-2">
-        Image Upload:
-        <input type="file" name="image"  className="form-input border p-2 ml-4" />
+        Sign up time:
+        <input type="time" name="startTime" className="form-input border p-2 ml-4" />
+      </label>
+      <label className="block mb-2">
+        Start Time:
+        <input type="time" name="startTime" className="form-input border p-2 ml-4" />
+      </label>
+      <label className="block mb-2">
+        Day of the week:
+        <select name="day" id="day">
+          {daysOfWeek.map(day => (
+            <option key="day" value="day">
+              {day}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="block mb-2">
+        frequency:
+        <input type="text" name="frequency"   className="form-input border p-2 ml-4" />
+      </label>
+      <label className="block mb-2">
+        Info:
+        <textarea name="description"   className="form-textarea"></textarea>
       </label>
 
       <label className="block mb-2">
-        Ticket Link:
-        <input type="url" name="ticket_link"   className="form-input border p-2 ml-4" />
-      </label>
-
-      <label className="block mb-4">
-        Ticket Price:
-        <input type="text" name="ticket_price"   className="form-input border p-2 ml-4" />
+        Sign-up Link:
+        <input type="url" name="signupForm"   className="form-input border p-2 ml-4" />
       </label>
 
       <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">Submit</button>

@@ -148,6 +148,7 @@ export default async function OpenMic() {
                         <div className="bg-slate-300 mb-3 mt-3 px-12 py-6 text-center rounded">
                           <strong className="underline text-2xl">{openMic.title}</strong>
                           <p className="mb-2 mt-2">Address: {openMic.address}</p>
+                          <p className="mb-2 mt-2">City: {openMic.city}</p>
                           <p className="mb-2">Sign up: {signUp(openMic)}</p>
                           <p className="mb-2">Start: {getTime(openMic.startTime)}</p>
                           <p className="mb-2">Frequency: {openMic.frequency}</p>
