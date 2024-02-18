@@ -2,7 +2,7 @@ import { prisma } from "@/db";
 import { revalidatePath } from "next/cache";
 import { createOpenMic } from "../actions";
 
-export default function OpenMicForm() {
+export default function OpenMicForm({user}: any) {
   const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   // save the start time as string,
   // save doors_open as string

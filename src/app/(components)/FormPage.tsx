@@ -3,7 +3,7 @@ import { useState } from "react";
 import EventForm from "./EventForm";
 import OpenMicForm from "./OpenMicForm";
 
-export default function FormPage() {
+export default function FormPage({user}: any) {
   const [selectedForm, setSelectForm] = useState<string>('Show');
   const forms = ['Show', 'Open Mic'];
 
@@ -12,13 +12,14 @@ export default function FormPage() {
   const renderForm = () => {
     switch (selectedForm) {
       case 'Show':
-        return <EventForm/>;
+        return <EventForm user={user}/>;
       case 'Open Mic':
-        return <OpenMicForm />;
+        return <OpenMicForm user={user} />;
       default:
         return null;
     }
   };
+
   return (
     <div className="flex flex-col">
       <select value={selectedForm} onChange={(e) => {
