@@ -1,8 +1,29 @@
+// "use client"
 import { prisma } from "@/db";
 import { revalidatePath } from "next/cache";
 import { createEvent } from "../actions";
+import { ApprovalStatus } from "../types";
+import { useFormState } from "react-dom";
+import { SubmitButton } from "../form/submit-button";
 
-export default function EventForm() {
+const initialState =  { 
+  status: "sucess", 
+  message: "File Has been Uploaded",
+  title: "",
+  date: new Date(),
+  doors_open: "",
+  start_time: "",
+  description: "",
+  venue_name: "",
+  address: "",
+  image_url: "",
+  ticket_link: "",
+  ticket_price: "",
+  approvalStatus: ApprovalStatus.PENDING,
+  userId: 4
+} ;
+
+export default function EventForm({user}: any) {
 
   // save the start time as string,
   // save doors_open as string
@@ -62,11 +83,11 @@ export default function EventForm() {
   // }
 
 
-
+  const [state, formAction] = useFormState(createEvent, initialState );
   // }
 
   return (
-    <form action={createEvent} className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
+    <form action={formAction} className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
       <label className="block mb-2">
         Title:
         <input type="text" name="title"   className="form-input border p-2 ml-4" />
@@ -103,7 +124,7 @@ export default function EventForm() {
 
       <label className="block mb-2">
         Image Upload:
-        <input type="file" name="image"  className="form-input border p-2 ml-4" />
+        <input type="file" name="image" accept="images/*" className="form-input border p-2 ml-4" />
       </label>
 
       <label className="block mb-2">
@@ -115,8 +136,7 @@ export default function EventForm() {
         Ticket Price:
         <input type="text" name="ticket_price"   className="form-input border p-2 ml-4" />
       </label>
-
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">Submit</button>
+     <SubmitButton/>
     </form>
   );
 };

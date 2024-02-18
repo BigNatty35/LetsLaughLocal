@@ -3,18 +3,18 @@ export enum ApprovalStatus {
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED'
 }
-export interface Event {
-  title: string,
-  date: Date,
-  image_url: string,
-  ticket_price: string,
-  ticket_link: string,
-  doors_open: string,
+export type eventType = {
+  title: string | null,
+  date: Date | null,
+  image_url: string | null,
+  ticket_price: string | null,
+  ticket_link: string | null,
+  doors_open: string | null,
   start_time: string,
-  appovalStatus: ApprovalStatus,
-  address: string,
-  description: string,
-  venue_name: string
+  approvalStatus: ApprovalStatus | null,
+  address: string | null,
+  description: string | null,
+  venue_name: string | null
 }
 
 export type EventArray = Event[];
