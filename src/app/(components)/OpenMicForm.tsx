@@ -1,6 +1,19 @@
 import { prisma } from "@/db";
 import { revalidatePath } from "next/cache";
 import { createOpenMic } from "../actions";
+import { useFormState } from "react-dom";
+
+const initialState = {
+  title: "",
+  startTime: "",
+  signupTime: "",
+  day: "",
+  city: "",
+  info: "",
+  frequency: "",
+  address: "",
+  signupForm: "",
+}
 
 export default function OpenMicForm({user}: any) {
   const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -64,9 +77,11 @@ export default function OpenMicForm({user}: any) {
 
 
   // }
+ 
+  const [state, formAction] = useFormState(createOpenMic, initialState );
 
   return (
-    <form action={createOpenMic} className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
+    <form action={formAction} className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
       <label className="block mb-2">
         Title:
         <input type="text" name="title" className="form-input border p-2 ml-4" />
@@ -78,8 +93,13 @@ export default function OpenMicForm({user}: any) {
       </label>
 
       <label className="block mb-2">
+        City:
+        <input type="text" name="city" className="form-input border p-2 ml-4" />
+      </label>
+
+      <label className="block mb-2">
         Sign up time:
-        <input type="time" name="startTime" className="form-input border p-2 ml-4" />
+        <input type="time" name="signupTime" className="form-input border p-2 ml-4" />
       </label>
       <label className="block mb-2">
         Start Time:
@@ -89,7 +109,7 @@ export default function OpenMicForm({user}: any) {
         Day of the week:
         <select name="day" id="day">
           {daysOfWeek.map(day => (
-            <option key="day" value="day">
+            <option key="day" value={day}>
               {day}
             </option>
           ))}
@@ -101,7 +121,7 @@ export default function OpenMicForm({user}: any) {
       </label>
       <label className="block mb-2">
         Info:
-        <textarea name="description"   className="form-textarea"></textarea>
+        <textarea name="info"   className="form-textarea"></textarea>
       </label>
 
       <label className="block mb-2">

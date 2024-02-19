@@ -14,7 +14,7 @@ export default function FormPage({user}: any) {
       case 'Show':
         return <EventForm user={user}/>;
       case 'Open Mic':
-        return <OpenMicForm />;
+        return <OpenMicForm user={user} />;
       default:
         return null;
     }

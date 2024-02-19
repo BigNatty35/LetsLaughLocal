@@ -1,4 +1,5 @@
 import GoogleProvider from "next-auth/providers/google";
+import { prisma } from "@/db";
 
 export const options = {
   providers: [
@@ -20,17 +21,24 @@ export const options = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.role = user.role;
-      console.log("USER-JWT:",user)
+      const dbUser = await prisma.user.findFirst({
+        where: {
+          email: token.email
+        }
+      })
+      console.log("USER:", user)
+      if (dbUser) token.role = dbUser.role;
+      console.log("TOKEN:",token)
       return token
     },
+
     async session({ session, token }) {
       if (session?.user) {
         session.user.role = token.role;
         session.user.googleId = token.sub;
       }
+      console.log("SESSION:", session)
       return session
     }
-
   }
 }
