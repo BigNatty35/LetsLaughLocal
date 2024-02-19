@@ -2,6 +2,7 @@ import { prisma } from "@/db";
 import Link from "next/link";
 import { Bangers } from 'next/font/google'
 import { ReactElement } from "react";
+import { POST } from "../api/auth/[...nextauth]/route";
 
 const doodle = Bangers({
   subsets: ['latin'],

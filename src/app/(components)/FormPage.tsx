@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react";
 import EventForm from "./EventForm";
-import OpenMicForm from "./OpenMicForm";
+import OpenMicForm  from './OpenMicForm';
 
 export default function FormPage({user}: any) {
   const [selectedForm, setSelectForm] = useState<string>('Show');
@@ -14,7 +14,7 @@ export default function FormPage({user}: any) {
       case 'Show':
         return <EventForm user={user}/>;
       case 'Open Mic':
-        return <OpenMicForm user={user} />;
+        return <OpenMicForm />;
       default:
         return null;
     }
