@@ -17,13 +17,19 @@ enum ApprovalStatus {
   REJECTED
 }
 
+enum UserRole {
+  ADMIN
+  USER
+}
 model User {
   id Int @id @default(autoincrement())
   name String
   email String @unique
   googleId String @unique
+  role UserRole @default(USER)
   createdAt DateTime @default(now())
   events Event[]
+  openMics OpenMic[]
 }
 
 model Event {
@@ -36,7 +42,7 @@ model Event {
   venue_name String
   address String
   image_url String
-  approvalStatus ApprovalStatus
+  approvalStatus ApprovalStatus @default(PENDING)
   ticket_link String
   ticket_price String
   userID Int
@@ -53,9 +59,12 @@ model OpenMic {
   day String
   frequency String
   signupForm String?
-  startTime DateTime
-  signupTime DateTime?
+  startTime String
+  signupTime String?
   info String?
+  approvalStatus ApprovalStatus @default(PENDING)
+  userID Int
+  user User @relation(fields: [userID], references:[id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

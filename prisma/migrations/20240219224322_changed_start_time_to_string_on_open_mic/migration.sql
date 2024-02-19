@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "OpenMic" ALTER COLUMN "startTime" SET DATA TYPE TEXT,
+ALTER COLUMN "signupTime" SET DATA TYPE TEXT;

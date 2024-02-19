@@ -1,7 +1,7 @@
 'use server'
 import { prisma } from "@/db";
 import { revalidatePath } from "next/cache";
-import { ApprovalStatus, eventType } from "./types";
+import { ApprovalStatus, eventType, openMicType } from "./types";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getServerSession } from "next-auth";
 import { options } from "./api/auth/[...nextauth]/options";
@@ -62,7 +62,6 @@ export async function createEvent(prevState: eventType, formData: FormData) {
           image_url: "https://comedyshowbucket.s3.amazonaws.com/4357C8E7-4635-44C5-8DD8-9B446450414E.JPG",
           ticket_link: formData.get("ticket_link") as string,
           ticket_price: formData.get("ticket_price") as string,
-          approvalStatus: 'PENDING',
           userID: user.id
         }
       })
@@ -105,23 +104,52 @@ export async function createEvent(prevState: eventType, formData: FormData) {
   
 }
 
-export async function createOpenMic(formData: FormData) {
+export async function createOpenMic(prevState: openMicType, formData: FormData) {
   "use server"
-    const  date = formData.get("day");
     const user = await createUser();
-    console.log(date)
-     await prisma.openMic.create({
-    data: {
-      title: formData.get("title") as string,
-      startTime: formData.get("startTime") as string,
-      signupTime: formData.get("signupTime") as string,
-      day: formData.get("day") as string,
-      city: formData.get("city") as string,
-      info: formData.get("info") as string,
-      frequency: formData.get("frequency") as string,
-      address: formData.get("address") as string,
-      signupForm: formData.get("signupForm") as string,
+    console.log("THIS IS USER IN OPENMIC:", user)
+    console.log("OPENMIC FORMDATA:", formData)
+    try {
+      await prisma.openMic.create({
+        data: {
+          title: formData.get("title") as string,
+          startTime: formData.get("startTime") as string,
+          signupTime: formData.get("signupTime") as string,
+          day: formData.get("day") as string,
+          city: formData.get("city") as string,
+          info: formData.get("info") as string,
+          frequency: formData.get("frequency") as string,
+          address: formData.get("address") as string,
+          signupForm: formData.get("signupForm") as string,
+          userID: user.id
+        }
+      })
+      revalidatePath("/")
+      return {
+        status: "success",
+        title: "",
+        startTime: "",
+        signupTime: "",
+        day: "",
+        city: "",
+        info: "",
+        frequency: "",
+        address: "",
+        signupForm: "",
+      }
+    } catch (error) {
+      console.error("Error creating OpenMic:", error);
+      return {
+        status: "success",
+        title: "",
+        startTime: "",
+        signupTime: "",
+        day: "",
+        city: "",
+        info: "",
+        frequency: "",
+        address: "",
+        signupForm: "",
+      }
     }
-  })
-  revalidatePath("/")
 }

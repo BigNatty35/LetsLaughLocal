@@ -17,4 +17,16 @@ export type eventType = {
   venue_name: string | null
 }
 
+export type openMicType = {
+  title: string | null,
+  startTime: string | null,
+  signupTime: string | null,
+  day: string | null,
+  city: string | null,
+  info: string | null,
+  frequency: string | null,
+  address: string | null,
+  signupForm: string | null, 
+}
+
 export type EventArray = Event[];
