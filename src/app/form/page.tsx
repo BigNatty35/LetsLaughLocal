@@ -12,13 +12,11 @@ import OpenMicForm from "../(components)/OpenMicForm";
 export default async function FormHomePage() {
 
   const session = await getServerSession(options)
-  const user = await prisma.user.findUnique({ where: { email: session.user.email }});
-
   if (!session) {
     redirect("/api/auth/signin?callbackUrl=/form")
   }
   return (
-    <FormPage user={user}/>
+    <FormPage/>
   )
 };
 

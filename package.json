@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "email": "email dev --dir src/emails"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.511.0",
@@ -19,12 +20,18 @@
     "@fullcalendar/timegrid": "^6.1.10",
     "@next/font": "^14.0.4",
     "@prisma/client": "^5.7.1",
+    "@react-email/components": "^0.0.14",
+    "@types/nodemailer": "^6.4.14",
     "jsonwebtoken": "^9.0.2",
     "next": "14.0.4",
     "next-auth": "^4.24.5",
+    "nodemailer": "^6.9.9",
     "openid-client": "^5.6.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-email": "2.0.0",
+    "react-hook-form": "^7.50.1",
+    "resend": "^3.2.0"
   },
   "devDependencies": {
     "@types/node": "^20",

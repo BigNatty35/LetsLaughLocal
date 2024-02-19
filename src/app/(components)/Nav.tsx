@@ -19,6 +19,7 @@ const Nav = async () => {
           <Link href="/shows" className="hover:text-customGold">Shows</Link>
           <Link href="/openmic" className="hover:text-customGold">Open Mics</Link>
           <Link href="/form" className="hover:text-customGold">Add Show/Mic</Link>
+          <Link href="/contact" className="hover:text-customGold">Contact</Link>
           {session ? 
             <Link href="/api/auth/signout?callbackUrl=/" className="hover:text-customGold">Logout</Link> :
             <Link href="/api/auth/signin?callbackUrl=/" className="hover:text-customGold">Login</Link>}
