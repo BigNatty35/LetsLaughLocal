@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import { Event, ApprovalStatus, EventArray } from '../types';
+import { eventType, ApprovalStatus, EventArray } from '../types';
 
 interface PhotoSliderProps {
   events: Event[];

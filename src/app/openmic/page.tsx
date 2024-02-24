@@ -114,12 +114,11 @@ export default async function OpenMic() {
 
   const orderedDays: string[] = Object.keys(weekDays).sort((a,b) => getDayOrder(a) - getDayOrder(b))
 
-  const getTime = (date: Date): string => {
-    const hours: number = date.getHours();
-    const minutes: number | string = date.getMinutes() > 0 ? date.getMinutes() : "00" ;
+  const getTime = (time: string): string => {
+    const [hours, mins] = time.split(":").map( el => parseInt(el));
     const ampm: string = hours >= 12 ? 'pm' : 'am';
     const formattedHours: number = hours % 12 || 12
-    return `${formattedHours.toString()}:${minutes.toString()}${ampm}`
+    return `${formattedHours.toString()}:${mins.toString()}${ampm}`
   }
 
   const signUp = (openMic: OpenMic): String | ReactElement => {

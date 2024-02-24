@@ -1,10 +1,11 @@
 'use server'
 import { prisma } from "@/db";
 import { revalidatePath } from "next/cache";
-import { ApprovalStatus, eventType, openMicType } from "./types";
+import {  eventType, openMicType } from "./types";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getServerSession } from "next-auth";
 import { options } from "./api/auth/[...nextauth]/options";
+import { ApprovalStatus } from "@prisma/client";
 
 
 
@@ -21,7 +22,7 @@ const s3Client = new S3Client({
       } 
     });
 
-async function createUser() {
+export async function createUser() {
   const { user: {name, email, googleId} } = await getServerSession(options);
   const user = await prisma.user.findUnique({where: { email: email}});
 
@@ -41,6 +42,7 @@ async function createUser() {
   }
   
 }
+
 export async function createEvent(prevState: eventType, formData: FormData) {
   "use server"
     const date = formData.get("date");
@@ -126,7 +128,7 @@ export async function createOpenMic(prevState: openMicType, formData: FormData) 
       })
       revalidatePath("/")
       return {
-        status: "success",
+        id: 3,
         title: "",
         startTime: "",
         signupTime: "",
@@ -140,7 +142,7 @@ export async function createOpenMic(prevState: openMicType, formData: FormData) 
     } catch (error) {
       console.error("Error creating OpenMic:", error);
       return {
-        status: "success",
+        id: 3,
         title: "",
         startTime: "",
         signupTime: "",
@@ -152,4 +154,55 @@ export async function createOpenMic(prevState: openMicType, formData: FormData) 
         signupForm: "",
       }
     }
+}
+
+export async function getPendingEvents() {
+  try {
+    const events = await prisma.event.findMany({
+      where: { approvalStatus: "PENDING"}
+    })
+
+    console.log(events);
+    return events
+  } catch (error) {
+    console.log(error)
+    return [{
+      status: "404"
+    }]
+  }
+
+}
+
+export async function getPendingOpenMics() {
+  try {
+    const openMics = await prisma.openMic.findMany({
+      where: { approvalStatus: "PENDING"}
+    })
+
+    console.log(openMics);
+    return openMics
+  } catch (error) {
+    console.log(error)
+    return [{
+      status: "404"
+    }]
+  }
+
+}
+
+export async function approveEvent(eventId: any) {
+  "use server"
+  try {
+    await prisma.event.update({
+      where: {
+        id: eventId.eventId
+      },
+      data: {
+        approvalStatus: 'APPROVED'
+      }
+    })
+    console.log("success")
+  } catch (error) {
+    console.log(error)
+  }
 }
