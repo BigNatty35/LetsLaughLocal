@@ -13,9 +13,10 @@ const Nav = async () => {
   return (
     <header className="bg-gray-600 text-gray-100">
       <nav className="flex justify-between items-center w-full px-10 py-4">
-        <div className={`${doodle.className} text-3xl hover:text-customGold`}>Lets Laught Local</div>
+        <div className={`${doodle.className} text-3xl hover:text-customGold`}>Lets Laugh Local</div>
         <div className={`flex gap-10 ${doodle.className} text-3xl`}>
           <Link href="/" className="hover:text-customGold">Home</Link>
+          <Link href="/dashboard" className="hover:text-customGold">Dashboard</Link>
           <Link href="/shows" className="hover:text-customGold">Shows</Link>
           <Link href="/openmic" className="hover:text-customGold">Open Mics</Link>
           <Link href="/form" className="hover:text-customGold">Add Show/Mic</Link>

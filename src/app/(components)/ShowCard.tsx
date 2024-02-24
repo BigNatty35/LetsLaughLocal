@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from 'next/link';
-import { Event } from '../types';
 
-export default function ShowCard({ event }) {
+export default function ShowCard(event: any ) {
   if (!event) {
     return (
       <h1 className="text-white">Sorry</h1>

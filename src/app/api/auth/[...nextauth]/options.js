@@ -5,7 +5,7 @@ export const options = {
   providers: [
     GoogleProvider({
       profile(profile) {
-        console.log("Profile Google:", profile)
+        // console.log("Profile Google:", profile)
         let userRole = "Google User"
 
         console.log("THIS THE SUB:", profile.sub)
@@ -26,9 +26,9 @@ export const options = {
           email: token.email
         }
       })
-      console.log("USER:", user)
+      // console.log("USER:", user)
       if (dbUser) token.role = dbUser.role;
-      console.log("TOKEN:",token)
+      // console.log("TOKEN:",token)
       return token
     },
 
@@ -37,7 +37,7 @@ export const options = {
         session.user.role = token.role;
         session.user.googleId = token.sub;
       }
-      console.log("SESSION:", session)
+      // console.log("SESSION:", session)
       return session
     }
   }
