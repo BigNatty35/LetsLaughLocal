@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from 'next/link';
 
-export default function ShowCard(event: any ) {
+export default function ShowCard({ event }: any) {
   if (!event) {
     return (
       <h1 className="text-white">Sorry</h1>
     )
   }
+  
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   const formattedDate = event.date.toLocaleDateString('en-US', options);
 

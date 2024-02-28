@@ -32,7 +32,7 @@ export default async function UpcomingShows() {
   })
 
   const orderedEvents = await eventsWithTime.sort((a, b) => a.date.getTime() - b.date.getTime());
-
+  // console.log(events)
   return (
     <>
     <div className='flex flex-col items-center'>
