@@ -1,11 +1,17 @@
 import type { Metadata } from 'next'
 import Link from 'next/link';
 import Nav from './(components)/Nav';
-import { Bangers } from 'next/font/google'
-const doodle = Bangers({
+import { Big_Shoulders_Inline_Text } from 'next/font/google'
+// const doodle = Bangers({
+//   subsets: ['latin'],
+//   weight: "400"
+// })
+
+const doodle = Big_Shoulders_Inline_Text({
   subsets: ['latin'],
   weight: "400"
 })
+
 
 import './globals.css'
 
@@ -21,11 +27,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-customRed w-full bg-cover bg-center p-24 ">
+      <body className="bg-black w-full bg-cover bg-center p-24">
+      <div className='flex  border-white border-x'>
         <Nav/>
-        <div className='m-2'>
+        <div className='m-auto justify-center'>
+          <div className='text-white text-6xl text-center mb-20'>
+            <h1 className={`${doodle.className}`}>Lets Laugh Local</h1>
+          </div>
           {children}
         </div>
+      </div>
       </body>
     </html>
   )

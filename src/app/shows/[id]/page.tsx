@@ -46,7 +46,6 @@ export default async function ShowDetailsPage({ params }: { params: { id: string
   const formattedDate = event?.date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   const doorsOpenTime: Date = addTimeStringToDate(new Date(), event?.doors_open || "")
 
-  console.log(event)
   if (event) {
     return (
       <>

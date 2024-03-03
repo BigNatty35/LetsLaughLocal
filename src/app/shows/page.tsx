@@ -1,20 +1,24 @@
 import { prisma } from "@/db";
-import { Bangers } from 'next/font/google'
+import { Josefin_Sans } from 'next/font/google'
 import Link from 'next/link';
 import ShowCard from "../(components)/ShowCard";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { ApprovalStatus } from "@prisma/client";
 
 
-const doodle = Bangers({
+const doodle = Josefin_Sans({
   subsets: ['latin'],
   weight: "400"
 })
 
 export default async function ShowsPage() {
-  const events = await prisma.event.findMany({ 
+  const events = await prisma.event.findMany({
+    where: {
+      approvalStatus: ApprovalStatus.APPROVED
+    },
    orderBy: { date: 'asc' } 
   })
 
@@ -25,8 +29,6 @@ export default async function ShowsPage() {
   //     password: "123abc",
   //   }
   // })
-
-  // console.log(user);
 
   const addTimeStringToDate = (date: Date, timeString: String) => {
     const [hours, minutes] = timeString.split(":").map(Number);
@@ -46,11 +48,13 @@ export default async function ShowsPage() {
   const orderedEvents = eventsWithTime.sort((a, b) => a.date.getTime() - b.date.getTime());
 
   return (
-    <>
-       <h1 className={`${doodle.className} text-white text-3xl bg-black text-center p-4`}>Shows</h1>
+    <div className="flex flex-wrap justify-center">
+      <div className="text-3xl text-customGold border text-center px-5 py-8 mb-5 rounded w-box">
+        <h1 className={`${doodle.className}`}>Shows</h1>
+      </div>
        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 bg-black rounded">
        {orderedEvents.map(event => <ShowCard key={event.id} event={event} />)}
       </div>
-    </>
+    </div>
   )
 }

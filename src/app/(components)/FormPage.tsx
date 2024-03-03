@@ -5,15 +5,15 @@ import OpenMicForm  from './OpenMicForm';
 
 export default function FormPage({user}: any) {
   const [selectedForm, setSelectForm] = useState<string>('Show');
-  const forms = ['Show', 'Open Mic'];
+  const forms = ['Create Show', 'Create Open Mic'];
 
 
   
   const renderForm = () => {
     switch (selectedForm) {
-      case 'Show':
+      case 'Create Show':
         return <EventForm user={user}/>;
-      case 'Open Mic':
+      case 'Create Open Mic':
         return <OpenMicForm user={user} />;
       default:
         return null;
@@ -22,7 +22,7 @@ export default function FormPage({user}: any) {
 
   return (
     <div className="flex flex-col">
-      <select value={selectedForm} onChange={(e) => {
+      <select className="p-5 text-center text-2xl text-white bg-black appearance-none" value={selectedForm} onChange={(e) => {
         setSelectForm(e.target.value) 
       }}>
         {forms.map((form) => (

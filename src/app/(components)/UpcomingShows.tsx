@@ -2,9 +2,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { prisma } from "@/db";
 import ShowCard from './ShowCard';
-import { Bangers } from 'next/font/google'
+import { Josefin_Sans } from 'next/font/google'
 
-const doodle = Bangers({
+const doodle = Josefin_Sans({
   subsets: ['latin'],
   weight: "400"
 })
@@ -32,11 +32,13 @@ export default async function UpcomingShows() {
   })
 
   const orderedEvents = await eventsWithTime.sort((a, b) => a.date.getTime() - b.date.getTime());
-
+  // console.log(events)
   return (
     <>
-    <div className='flex flex-col items-center'>
-      <h1 className={`${doodle.className} text-white text-3xl bg-black text-center p-4`}>Upcoming Shows</h1>
+    <div className='flex flex-wrap justify-center'>
+      <div className="text-3xl text-customGold border text-center px-5 py-8 mb-5 rounded w-box">
+        <h1 className={`${doodle.className}`}>Upcoming Shows</h1>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
        {orderedEvents.map(event => <ShowCard key={event.id} event={event} />)}
       </div>

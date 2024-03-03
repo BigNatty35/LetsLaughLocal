@@ -5,10 +5,8 @@ export const options = {
   providers: [
     GoogleProvider({
       profile(profile) {
-        // console.log("Profile Google:", profile)
         let userRole = "Google User"
 
-        console.log("THIS THE SUB:", profile.sub)
         return {
           ...profile,
           id: profile.sub,
@@ -26,9 +24,7 @@ export const options = {
           email: token.email
         }
       })
-      // console.log("USER:", user)
       if (dbUser) token.role = dbUser.role;
-      // console.log("TOKEN:",token)
       return token
     },
 

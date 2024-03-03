@@ -1,26 +1,23 @@
 'use server'
+import { redirect } from 'next/navigation'
 import { prisma } from "@/db";
-import { revalidatePath } from "next/cache";
-import {  eventType, openMicType } from "./types";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getServerSession } from "next-auth";
 import { options } from "./api/auth/[...nextauth]/options";
-import { ApprovalStatus } from "@prisma/client";
-
-
+import { buffer } from 'stream/consumers';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import sharp from 'sharp';
 
 const bucketRegion = process.env.NEXT_AWS_S3_REGION ?? "";
-const accessKey = process.env.NEXT_AWS_S3_ACCESS_KEY_ID ?? "";
 const secretAccessKey = process.env.NEXT_AWS_S3_SECRET_ACCESS_KEY ?? "";
-const bucketName = process.env.NEXT_AWS_S3_BUCKET_NAME ?? "";
+const accessKey = process.env.NEXT_AWS_S3_ACCESS_KEY_ID ?? "";
 
 const s3Client = new S3Client({
-      region: bucketRegion,
-      credentials: {
-        accessKeyId: accessKey,
-        secretAccessKey: secretAccessKey
-      } 
-    });
+  region: bucketRegion,
+  credentials: {
+    accessKeyId: accessKey,
+    secretAccessKey: secretAccessKey
+  }
+});
 
 export async function createUser() {
   const { user: {name, email, googleId} } = await getServerSession(options);
@@ -40,169 +37,111 @@ export async function createUser() {
     console.log("Created New User:", newUser);
     return newUser;
   }
-  
 }
 
-export async function createEvent(prevState: eventType, formData: FormData) {
-  "use server"
-    const date = formData.get("date");
-
-    console.log(date)
-    const user = await createUser();
-    // create a user before creating an event. 
-    // check to see if formData has user ID. 
-    try {
-      await prisma.event.create({
-        data: {
-          title: formData.get("title") as string,
-          date: new Date(formData.get("date") as unknown as Date),
-          doors_open: formData.get("doors_open") as string,
-          start_time: formData.get("start_time") as string,
-          description: formData.get("description") as string,
-          venue_name: formData.get("venue_name") as string,
-          address: formData.get("address") as string,
-          image_url: "https://comedyshowbucket.s3.amazonaws.com/4357C8E7-4635-44C5-8DD8-9B446450414E.JPG",
-          ticket_link: formData.get("ticket_link") as string,
-          ticket_price: formData.get("ticket_price") as string,
-          userID: user.id
-        }
-      })
-      revalidatePath("/")
-      return { 
-        status: "sucess", 
-        message: "File Has been Uploaded",
-        title: "",
-        date: new Date(),
-        doors_open: "",
-        start_time: "",
-        description: "",
-        venue_name: "",
-        address: "",
-        image_url: "",
-        ticket_link: "",
-        ticket_price: "",
-        approvalStatus: ApprovalStatus.PENDING,
-        userId: ""
-      } 
-    } catch (error) {
-      return  { 
-        status: "sucess", 
-        message: "File Has been Uploaded",
-        title: "",
-        date: new Date(),
-        doors_open: "",
-        start_time: "",
-        description: "",
-        venue_name: "",
-        address: "",
-        image_url: "",
-        ticket_link: "",
-        ticket_price: "",
-        approvalStatus: ApprovalStatus.PENDING,
-        userId: 4
-      } 
-    }
-     
-  
-}
-
-export async function createOpenMic(prevState: openMicType, formData: FormData) {
-  "use server"
-    const user = await createUser();
-    console.log("THIS IS USER IN OPENMIC:", user)
-    console.log("OPENMIC FORMDATA:", formData)
-    try {
-      await prisma.openMic.create({
-        data: {
-          title: formData.get("title") as string,
-          startTime: formData.get("startTime") as string,
-          signupTime: formData.get("signupTime") as string,
-          day: formData.get("day") as string,
-          city: formData.get("city") as string,
-          info: formData.get("info") as string,
-          frequency: formData.get("frequency") as string,
-          address: formData.get("address") as string,
-          signupForm: formData.get("signupForm") as string,
-          userID: user.id
-        }
-      })
-      revalidatePath("/")
-      return {
-        id: 3,
-        title: "",
-        startTime: "",
-        signupTime: "",
-        day: "",
-        city: "",
-        info: "",
-        frequency: "",
-        address: "",
-        signupForm: "",
-      }
-    } catch (error) {
-      console.error("Error creating OpenMic:", error);
-      return {
-        id: 3,
-        title: "",
-        startTime: "",
-        signupTime: "",
-        day: "",
-        city: "",
-        info: "",
-        frequency: "",
-        address: "",
-        signupForm: "",
-      }
-    }
-}
-
-export async function getPendingEvents() {
-  try {
-    const events = await prisma.event.findMany({
-      where: { approvalStatus: "PENDING"}
-    })
-
-    console.log(events);
-    return events
-  } catch (error) {
-    console.log(error)
-    return [{
-      status: "404"
-    }]
+async function uploadFileToS3(file: any, fileName: string) {
+  const fileBuffer = await sharp(file).resize({width: 500}).toBuffer()
+  const uniqueFileName = `${fileName}${Date.now()}`
+  const params = {
+    Bucket: process.env.NEXT_AWS_S3_BUCKET_NAME,
+    Key: `${uniqueFileName}`,
+    Body: fileBuffer,
+    ContentType: "image/jpg"
   }
 
-}
+  const command = new PutObjectCommand(params);
 
-export async function getPendingOpenMics() {
   try {
-    const openMics = await prisma.openMic.findMany({
-      where: { approvalStatus: "PENDING"}
-    })
-
-    console.log(openMics);
-    return openMics
+    const response = await s3Client.send(command);
+    console.log("File uploaded succesfully:", response)
+    return `https://comedyshowbucket.s3.amazonaws.com/${uniqueFileName}`;
   } catch (error) {
-    console.log(error)
-    return [{
-      status: "404"
-    }]
+    console.error("Error:", error);
   }
-
 }
 
-export async function approveEvent(eventId: any) {
-  "use server"
+export async function createEvent(formData: FormData) {
+  let redirectPath : string | null = null;
+
+  const user = await createUser();
+
+  const date = formData.get("date");
+
+  let image_url: any;
+
+  console.log("SEVER ACTION!")
+
+  console.log("FORM DATA", formData)
+  // console.log("FILE:", file);
+
+
   try {
-    await prisma.event.update({
-      where: {
-        id: eventId.eventId
-      },
+    const file = formData.get("image_url") as File;
+
+    if (file) {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    image_url = await uploadFileToS3(buffer, file.name)
+    console.log("THE FILE NAME", image_url)
+    }
+
+    const event = await prisma.event.create({
       data: {
-        approvalStatus: 'APPROVED'
+        title: formData.get("title") as string,
+        date: new Date(formData.get("date") as unknown as Date),
+        doors_open: formData.get("doors_open") as string,
+        start_time: formData.get("start_time") as string,
+        description: formData.get("description") as string,
+        venue_name: formData.get("venue_name") as string,
+        address: formData.get("address") as string,
+        image_url: image_url,
+        ticket_link: formData.get("ticket_link") as string,
+        ticket_price: formData.get("ticket_price") as string,
+        userID: user.id
       }
     })
-    console.log("success")
+
+    redirectPath = `/shows/${event.id}`
+    console.log("WE MADE IT TO EVENT SERVER")
   } catch (error) {
-    console.log(error)
+    console.error("ERROR", error);
+    redirect('/shows')
+  } finally {
+    if (redirectPath) {
+      redirect(redirectPath)
+    }
+  }
+}
+
+export async function createOpenMic(formData: FormData) {
+  let redirectPath : string | null = null;
+  const user = await createUser();
+  const date = formData.get("date");
+  console.log("SEVER ACTION!")
+  console.log("USER OPENMIC!", user)
+  
+  try {
+    const openMic = await prisma.openMic.create({
+      data: {
+        title: formData.get("title") as string,
+        startTime:  formData.get("startTime") as string,
+        signupTime:  formData.get("signupTime") as string,
+        info:  formData.get("info") as string,
+        address:  formData.get("address") as string,
+        signupForm: formData.get("signupForm") as string,
+        day:  formData.get("day") as string,
+        frequency:  formData.get("frequency") as string,
+        city:  formData.get("city") as string,
+        user: {
+          connect: {
+            id: user.id
+          }
+        }
+      }
+    })
+    console.log("WE MADE IT. OPEN MIC", openMic);
+  } catch (error) {
+    console.error("ERROR!!!!", error);
+  } finally {
+    console.log("hello")
   }
 }
