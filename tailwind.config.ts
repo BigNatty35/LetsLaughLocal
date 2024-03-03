@@ -19,6 +19,9 @@ const config: Config = {
       },
       maxHeight: {
         '1/2': '50%',
+      },
+      width: {
+        'box': '20rem'
       }
     },
   },

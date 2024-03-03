@@ -1,10 +1,11 @@
 import { prisma } from "@/db";
 import Link from "next/link";
-import { Bangers } from 'next/font/google'
+import { Josefin_Sans } from 'next/font/google'
 import { ReactElement } from "react";
 import { POST } from "../api/auth/[...nextauth]/route";
+import { ApprovalStatus } from "@prisma/client";
 
-const doodle = Bangers({
+const doodle = Josefin_Sans({
   subsets: ['latin'],
   weight: "400"
 })
@@ -38,8 +39,9 @@ type DayOrder = {
 }
 
 async function getMics() {
-  const mics = await prisma.openMic.findMany();
-  console.log(mics)
+  const mics = await prisma.openMic.findMany({
+    where: {approvalStatus: ApprovalStatus.APPROVED}
+  });
   return mics;
 }
 
@@ -131,7 +133,7 @@ export default async function OpenMic() {
   return (
     <>
       <div className="flex flex-col justify-center items-center m-0 m-h-screen mb-10">
-        <div className="text-6xl text-white border text-center bg-black px-5 py-8 mb-5 rounded">
+        <div className="text-3xl text-customGold border text-center px-5 py-8 mb-5 rounded w-box">
           <p className={`${doodle.className}`}>Open Mic List</p>
         </div>
         <div>
