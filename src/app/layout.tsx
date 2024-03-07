@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link';
+import { Toaster } from 'react-hot-toast'
 import Nav from './(components)/Nav';
 import { Big_Shoulders_Inline_Text } from 'next/font/google'
 // const doodle = Bangers({
@@ -37,6 +38,7 @@ export default function RootLayout({
           {children}
         </div>
       </div>
+      <Toaster position="top-right"/>
       </body>
     </html>
   )

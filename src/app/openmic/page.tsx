@@ -118,16 +118,20 @@ export default async function OpenMic() {
 
   const getTime = (time: string): string => {
     const [hours, mins] = time.split(":").map( el => parseInt(el));
+    console.log("time:", time)
     const ampm: string = hours >= 12 ? 'pm' : 'am';
     const formattedHours: number = hours % 12 || 12
-    return `${formattedHours.toString()}:${mins.toString()}${ampm}`
+    const formattedMins: string = mins >= 10 ? mins.toString() : "0" + mins.toString();
+    return `${formattedHours.toString()}:${formattedMins}${ampm}`
   }
 
   const signUp = (openMic: OpenMic): String | ReactElement => {
     if (openMic.signupForm) {
       return <a className="text-1xl text-blue-600 underline"href={openMic.signupForm}>sign up here</a>
+    } else if (openMic.signupTime) {
+      return getTime(openMic.signupTime)
     }
-    return getTime(openMic.signupTime)
+    return "--"
   }
 
   return (

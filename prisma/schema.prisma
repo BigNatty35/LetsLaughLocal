@@ -43,8 +43,8 @@ model Event {
   address String
   image_url String
   approvalStatus ApprovalStatus @default(PENDING)
-  ticket_link String
-  ticket_price String
+  ticket_link String?
+  ticket_price String? @default("Free")
   userID Int
   user User @relation(fields: [userID], references:[id])
   createdAt DateTime @default(now())

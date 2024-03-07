@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/db";
 
@@ -16,6 +17,7 @@ export async function PUT(req: Request, context: any) {
         approvalStatus: approvalStatus
       }
     })
+    revalidatePath('/shows')
     return NextResponse.json({
       status: "200 Ok",
       updatedEventId: eventId,

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/db";
+import { revalidatePath } from "next/cache";
 
 export async function PUT(req: Request, context: any) {
   const  { data: { approvalStatus} } = await req.json()
@@ -16,6 +17,7 @@ export async function PUT(req: Request, context: any) {
         approvalStatus: approvalStatus
       }
     })
+    revalidatePath("/openMic")
     return NextResponse.json({
       status: "200 Ok",
       updatedOpenMicId: openMicId,
