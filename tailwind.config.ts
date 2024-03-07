@@ -22,7 +22,7 @@ const config: Config = {
       },
       width: {
         'box': '20rem'
-      }
+      },
     },
   },
   plugins: [],

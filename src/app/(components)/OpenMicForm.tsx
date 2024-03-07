@@ -1,79 +1,73 @@
+"use client"
+import toast from 'react-hot-toast';
 import { createOpenMic } from '../actions';
 
 export default function OpenMicForm({user}: any) {
   const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-  // save the start time as string,
-  // save doors_open as string
-  // migrate 
+  
+  
   //  we are saving them as strings (e.g. "HH:mm AM/PM")
   // when we receive object from DB, we will just display the string, 
   // if we want to order, we will convert to date object. 
 
-// date.toLocaleDateString('en-us', { weekday: 'long'})
-  // const [formData, setFormData] = useState({
-  //   title: '',
-  //   date: '',
-  //   doors_open: '',
-  //   description: '',
-  //   venue_name: '',
-  //   address: '',
-  //   image: null,
-  //   ticket_link: '',
-  //   ticket_price: '',
-  // });
 
+  const clientAction = async (formData: FormData) => {
+    const response = await createOpenMic(formData);
 
+    if (response?.error) {
+      toast.error(response.error);
+    }
+
+  }
   return (
-    <form action={createOpenMic} className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
-      <label className="block mb-2">
+    <form action={clientAction} className="max-w-md mx-auto mt-8 px-6 py-8 bg-white shadow-md rounded-md flex flex-col items-start">
+      <label className="block mb-2 font-bold">
         Title:
-        <input type="text" name="title" className="form-input border p-2 ml-4"/>
       </label>
+        <input type="text" name="title" className="form-input border p-2 mb-4 " required/>
 
-      <label className="block mb-2">
+      <label className="block mb-2 font-bold">
         Address:
-        <input type="text" name="address" className="form-input border p-2 ml-4"/>
       </label>
+        <input type="text" name="address" className="form-input border p-2 mb-4 " required/>
 
-      <label className="block mb-2">
+      <label className="block mb-2 font-bold">
         City:
-        <input type="text" className="form-input border p-2 ml-4" name="city"/>
       </label>
+        <input type="text" className="form-input border p-2 mb-4" name="city" required/>
 
-      <label className="block mb-2">
-        Sign up time:
-        <input type="time" className="form-input border p-2 ml-4" name="signupTime"/>
+      <label className="block mb-2 font-bold">
+        Sign up time <span className='text-sm'>(optional)</span> :
       </label>
-      <label className="block mb-2">
+        <input type="time" className="form-input border p-2 mb-4" name="signupTime"/>
+      <label className="block mb-2 font-bold">
         Start Time:
-        <input type="time" className="form-input border p-2 ml-4" name="startTime"/>
       </label>
-      <label className="block mb-2">
+        <input type="time" className="form-input border p-2 mb-4" required name="startTime"/>
+      <label className="block mb-2 font-bold">
         Day of the week:
-        <select name="day" id="day">
+      </label>
+        <select name="day" id="day" className='px-4 py-2 rounded mb-4' required>
           {daysOfWeek.map((day, index) => (
             <option key={index} value={day}>
               {day}
             </option>
           ))}
         </select>
+      <label className="block mb-2 font-bold">
+        Frequency:
       </label>
-      <label className="block mb-2">
-        frequency:
-        <input type="text" name="frequency" className="form-input border p-2 ml-4" />
-      </label>
-      <label className="block mb-2">
+        <input type="text" name="frequency" className="form-input border p-2 mb-4 " required />
+      <label className="block mb-2 font-bold">
         Info:
-        <textarea name="info" className="form-textarea"></textarea>
       </label>
+        <textarea name="info" className="form-textarea border" rows={4} cols={30}></textarea>
 
-      <label className="block mb-2">
-        Sign-up Link:
-        <input type="url" name="signupForm" className="form-input border p-2 ml-4" />
+      <label className="block mb-2 font-bold">
+        Sign-up Link: <span className='text-sm'>(optional)</span>
       </label>
-
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">Submit</button>
+        <input type="url" name="signupForm" className="form-input border p-2 mb-4 " />
+      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">Submit Open Mic</button>
     </form>
   );
 };
