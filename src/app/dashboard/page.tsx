@@ -43,24 +43,33 @@ export default  function Dashboard() {
     try {
       const eventResponse = await axios.get('/api/event');
       setEvents(eventResponse.data.events);
-      
-      console.log(eventResponse.data.events)
-
+    
       const openMicResponse = await axios.get('/api/openMic');
       setOpenMics(openMicResponse.data.openMics);
-      
-      console.log(openMicResponse.data.openMics)
+    
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
-  const approveEvent = async (eventId: number) => {
+  const handleDashboardEvent = async (eventId: number, status: ApprovalStatus) => {
     try {
-      await axios.put(`/api/event/${eventId}`, {data: { approvalStatus: ApprovalStatus.APPROVED }})
+      await axios.put(`/api/event/${eventId}`, {data: { approvalStatus: status }})
       if (events !== null) {
         const updatedEvents = events.filter((event: eventType) => event.id !== eventId)
         setEvents(updatedEvents)
+      }
+    } catch (error) {
+      console.error("Error:", error)
+    }
+  }
+
+  const handleDashboardMic = async (openMicId: number, status: ApprovalStatus) => {
+    try {
+      await axios.put(`/api/openMic/${openMicId}`, {data: { approvalStatus: status }})
+      if (openMics !== null) {
+        const updatedOpenMics = openMics.filter((openMic: openMicType) => openMic.id !== openMicId)
+        setOpenMics(updatedOpenMics)
       }
     } catch (error) {
       console.error("Error:", error)
@@ -98,7 +107,8 @@ export default  function Dashboard() {
             eventId={event.id}
             description={event.description}
             venue={event.venue_name}
-            approveHandler={approveEvent}/>
+            approveHandler={handleDashboardEvent}
+            rejectHandler={handleDashboardEvent}/>
         ))}
         </div>
         )}
@@ -112,7 +122,8 @@ export default  function Dashboard() {
           title={openMic.title}
           description={openMic.info}
           address={openMic.address}
-          approveHandler={approveOpenMic}/>
+          approveHandler={handleDashboardMic}
+          rejectHandler={handleDashboardMic}/>
           ))}
         </div>
       )}

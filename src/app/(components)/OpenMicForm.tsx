@@ -1,17 +1,37 @@
 "use client"
 import toast from 'react-hot-toast';
+import { useState } from 'react';
 import { createOpenMic } from '../actions';
+import TimePicker from './TimePicker';
 
 export default function OpenMicForm({user}: any) {
   const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   
+  const [signupTime, setSignUpTime] = useState("");
+  const [startTime, setStartTime] = useState("8:00PM");
+  const [signup, setSignup] = useState(true);
   
   //  we are saving them as strings (e.g. "HH:mm AM/PM")
   // when we receive object from DB, we will just display the string, 
   // if we want to order, we will convert to date object. 
 
 
+  const handleSignUpTimeChange = (newTime: string) => {
+    setSignUpTime(newTime);
+    console.log("NEWEST Start TIME!!!!!!", signupTime);
+  };
+
+  const handleStartTimeChange = (newTime: string) => {
+    setStartTime(newTime);
+    console.log("NEWEST Doors Open!!!!!!", startTime);
+  };
+
+
   const clientAction = async (formData: FormData) => {
+    console.log(formData)
+    const startTime = formData.get("startTime") as string;
+    const signupTime = formData.get("signupTime") as string;
+    console.log(startTime >= signupTime)
     const response = await createOpenMic(formData);
 
     if (response?.error) {
@@ -36,14 +56,29 @@ export default function OpenMicForm({user}: any) {
       </label>
         <input type="text" className="form-input border p-2 mb-4" name="city" required/>
 
-      <label className="block mb-2 font-bold">
-        Sign up time <span className='text-sm'>(optional)</span> :
-      </label>
-        <input type="time" className="form-input border p-2 mb-4" name="signupTime"/>
-      <label className="block mb-2 font-bold">
+      <label className="block mb-2 mt-2 font-bold">
         Start Time:
       </label>
-        <input type="time" className="form-input border p-2 mb-4" required name="startTime"/>
+      <TimePicker onChange={handleStartTimeChange} />
+      <input type="hidden" name="startTime" value={startTime} />
+      <label className="block mb-2 mt-2 font-bold">
+        Sign-up Time? (optional)
+      </label>
+      <div className='flex'>
+        <div className='mr-4'>
+          <label>
+            <input type="radio"  className="m-2" checked={signup} onChange={() => setSignup(true)} />
+            Yes
+          </label>
+        </div>
+          <label>
+            <input type="radio" className="m-2" checked={!signup} onChange={() => setSignup(false)} />
+            No
+          </label>
+      </div>
+
+      {signup && <TimePicker onChange={handleSignUpTimeChange} />}
+      <input type="hidden" name="signupTime" value={signup ? signupTime : ""} />
       <label className="block mb-2 font-bold">
         Day of the week:
       </label>

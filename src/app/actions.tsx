@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { prisma } from "@/db";
 import { getServerSession } from "next-auth";
 import { options } from "./api/auth/[...nextauth]/options";
+import { to24HourFormat } from './utils/global-utils';
 import { buffer } from 'stream/consumers';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import sharp from 'sharp';
@@ -43,7 +44,7 @@ export async function createUser() {
 }
 
 async function uploadFileToS3(file: any, fileName: string) {
-  const fileBuffer = await sharp(file).resize(300, 300).toBuffer()
+  const fileBuffer = await sharp(file).resize(300, 300).withMetadata().toBuffer()
   const uniqueFileName = `${fileName}${Date.now()}`
   const params = {
     Bucket: process.env.NEXT_AWS_S3_BUCKET_NAME,
@@ -69,12 +70,16 @@ export async function createEvent(eventData: FormData) {
   const user = await createUser();
 
   let image_url: any;
+  
+  const convertedStartTime = to24HourFormat(eventData.get("start_time") as string)
+  const convertedDoorsOpen = to24HourFormat(eventData.get("doors_open") as string)
 
+  console.log("EVENT DATA FROM CLIENT:", eventData)
   const newEvent = {
     title: eventData.get("title") as string,
     date: new Date(eventData.get("date") as unknown as Date),
-    doors_open: eventData.get("doors_open") as string,
-    start_time: eventData.get("start_time") as string,
+    doors_open: convertedDoorsOpen,
+    start_time: convertedStartTime,
     description: eventData.get("description") as string,
     venue_name: eventData.get("venue_name") as string,
     address: eventData.get("address") as string,
@@ -86,13 +91,15 @@ export async function createEvent(eventData: FormData) {
   // valitdate eventData to find errors
   const result = EventSchema.safeParse(newEvent);
 
+
+  // if (!result.success) return returnError(result);
   // if there are errors, return object with errors to display on client
   // with Toast.
   if (!result.success) {
     let errorMessage = "";
 
     result.error.issues.forEach((issue) => {
-      errorMessage = errorMessage + issue.path[0] + ": " + issue.message + ". ";
+      errorMessage = errorMessage + "•" + issue.message + "\n";
     })
     console.log("we shoujld get error toast")
     return {
@@ -114,7 +121,7 @@ export async function createEvent(eventData: FormData) {
         ...result.data,
         image_url: image_url,
         userID: user.id,
-        ticket_link: result.data["ticket_url"] as string,
+        ticket_link: result.data["ticket_link"] as string,
         ticket_price: result.data["ticket_price"] as string,
       }
     })
@@ -134,12 +141,22 @@ export async function createEvent(eventData: FormData) {
   }
 }
 
+function returnError(result: any) {
+  let errorMessage = "";
+
+  result.error.issues.forEach((issue: any) => {
+    errorMessage = errorMessage + "•" + issue.message + "\n";
+  })
+  console.log("we should get error toast")
+  return {
+    error: errorMessage
+  }
+}
+
 export async function createOpenMic(formData: FormData) {
   let redirectPath : string | null = null;
   const user = await createUser();
   const date = formData.get("date");
-  console.log("SEVER ACTION!")
-  console.log("USER OPENMIC!", user)
   
   const newOpenMic = {
     title: formData.get("title") as string,
@@ -154,32 +171,14 @@ export async function createOpenMic(formData: FormData) {
   }
 
   const result = OpenMicSchema.safeParse(newOpenMic);
+  console.log("OPENMIC SERVER RESULT", result)
 
-  if (!result.success) {
-    let errorMessage = "";
-
-    result.error.issues.forEach((issue) => {
-      errorMessage = errorMessage + issue.path[0] + ": " + issue.message + ". ";
-    })
-    console.log("we shoujld get error toast")
-    return {
-      error: errorMessage
-    }
-  }
-
+  if (!result.success) return returnError(result);
 
   try {
     const openMic = await prisma.openMic.create({
       data: {
-        title: formData.get("title") as string,
-        startTime:  formData.get("startTime") as string,
-        signupTime:  formData.get("signupTime") as string,
-        info:  formData.get("info") as string,
-        address:  formData.get("address") as string,
-        signupForm: formData.get("signupForm") as string,
-        day:  formData.get("day") as string,
-        frequency:  formData.get("frequency") as string,
-        city:  formData.get("city") as string,
+        ...newOpenMic,
         user: {
           connect: {
             id: user.id
@@ -187,14 +186,46 @@ export async function createOpenMic(formData: FormData) {
         }
       }
     })
-    console.log("WE MADE IT. OPEN MIC", openMic);
-    redirect('/openMic')
   } catch (error) {
     console.error("ERROR!!!!", error);
     return {
       error: "Something went wrong."
     }
   } finally {
-    console.log("hello, finally")
+    if (result.success) {
+      redirect('/openmic');
+    }
   }
+}
+
+export async function deleteEvent(eventId: number) {
+  
+  try {
+    const response = await prisma.event.delete({
+      where: {
+        id: eventId
+      }
+    })
+    console.log("Delete it ID:", response)
+    // revalidatePath('/shows')
+  } catch (error) {
+    console.error("ERROR", error);
+  }
+  redirect('/shows')
+}
+
+export async function deleteOpenMic(openMicId: number) {
+  
+  try {
+    const response = await prisma.openMic.delete({
+      where: {
+        id: openMicId
+      }
+    })
+    console.log("Delete it ID:", response)
+    // revalidatePath('/shows')
+  } catch (error) {
+    console.error("ERROR", error);
+  }
+  redirect('/openmic')
 }
