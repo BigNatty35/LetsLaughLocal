@@ -1,3 +1,4 @@
+import { ApprovalStatus } from "@prisma/client";
 import React from "react"
 
 interface PendingOpenMicProps {
@@ -5,10 +6,11 @@ interface PendingOpenMicProps {
   title: string | null;
   description: string | null;
   address: string | null;
-  approveHandler: (openMicId: number) => void;
+  approveHandler: (openMicId: number, approvalStatus: ApprovalStatus) => void;
+  rejectHandler: (openMicId: number, approvalStatus: ApprovalStatus) => void;
 }
 
-const PendingOpenMic: React.FC<PendingOpenMicProps> = ({openMicId, title, description, address, approveHandler}) => {
+const PendingOpenMic: React.FC<PendingOpenMicProps> = ({openMicId, title, description, address, approveHandler, rejectHandler}) => {
   return (
     <>
     <div className="bg-white">
@@ -19,8 +21,8 @@ const PendingOpenMic: React.FC<PendingOpenMicProps> = ({openMicId, title, descri
         <p>{address}</p>
       </div>
       <div>
-      <button className="bg-green-500 text-white px-4 py-2 rounded-md" onClick={() => approveHandler(openMicId)}>Approve</button>
-        <button>Decline</button>
+      <button className="bg-green-500 text-white px-4 py-2 rounded-md" onClick={() => approveHandler(openMicId, ApprovalStatus.APPROVED)}>Approve</button>
+      <button className="bg-red-500 text-white px-4 py-2 rounded-md" onClick={() => approveHandler(openMicId, ApprovalStatus.REJECTED)}>Decline</button>
       </div>
     </li>
     </div>

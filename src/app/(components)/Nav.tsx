@@ -17,7 +17,7 @@ const Nav = async () => {
           <Link href="/" className="hover:text-customGold">Home</Link>
           { session && session.user.role === "ADMIN" && <Link href="/dashboard" className="hover:text-customGold">Dashboard</Link> }
           <Link href="/shows" className="hover:text-customGold">Shows</Link>
-          <Link href="/openmic" className="hover:text-customGold">Open Mics</Link>
+          <Link href="https://nctrianglecomedy.notion.site/Open-Mic-Calendars-f11ea6fcbe7041bc98f3987c4870d648" className="hover:text-customGold">Open Mics</Link>
           <Link href="/form" className="hover:text-customGold">Create</Link>
           <Link href="/contact" className="hover:text-customGold">Contact</Link>
           {session ? 

@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { redirect } from 'next/navigation';
 import nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 
@@ -29,8 +30,8 @@ export async function POST(request: NextRequest) {
     to: process.env.MY_EMAIL,
     // cc: email, (uncomment this line if you want to send a copy to the sender)
     subject: `Message from ${name} (${email})`,
-    text: "This is a header pizzaburgersThis is a description",
-    html: "<h1>This is a header</h1> <ul><li>pizza</li><li>burgers</li></ul><p>This is a description</p>" 
+    text: "Hello there",
+    html: `<p>${message}</p>` 
   };
 
   const sendMailPromise = () => {

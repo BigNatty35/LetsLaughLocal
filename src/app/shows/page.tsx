@@ -29,21 +29,28 @@ export default async function ShowsPage() {
   //     password: "123abc",
   //   }
   // })
+  console.log("EVENTS!!!:", events)
 
-  const addTimeStringToDate = (date: Date, timeString: String) => {
+  const addTimeStringToDate = (date: Date, timeString: String): Date => {
     const [hours, minutes] = timeString.split(":").map(Number);
-
-    date.setHours(hours)
-    date.setMinutes(minutes)
-    return date
-
+    console.log("This is events time:", date.getTime());
+    const newDate = new Date(date.getTime());
+    console.log("NEWEST DATE w/o time", newDate)
+    newDate.setUTCHours(hours, minutes, 0, 0)
+    console.log("NEW DATE!!!", newDate);
+    return newDate
   }
 
   const eventsWithTime = events.map((event) => {
-    // map through the events and add start time to date object
-    addTimeStringToDate(event.date, event.start_time)
-    return event
+    const eventDate = new Date(event.date); 
+    const newDate = addTimeStringToDate(eventDate, event.start_time);
+    return { ...event, date: newDate };
   })
+
+    // map through the events and add start time to date object
+    // const eventDate = (event.date instanceof Date) ? event.date : new Date(event.date);
+
+  console.log("EVENTS WITH TIME:", eventsWithTime);
 
   const orderedEvents = eventsWithTime.sort((a, b) => a.date.getTime() - b.date.getTime());
 

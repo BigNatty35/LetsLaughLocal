@@ -2,11 +2,9 @@
 
 import { SubmitButton } from "../form/submit-button";
 import { createEvent } from "../actions";
+import { useState, useEffect, ChangeEvent } from 'react'
+import TimePicker from "./TimePicker";
 import toast from 'react-hot-toast';
-import { z } from "zod";
-import axios from 'axios';
-import { Event, EventSchema } from "../types";
-
 
 export default function EventForm({user}: any) {
   // save the start time as string,
@@ -15,9 +13,43 @@ export default function EventForm({user}: any) {
   //  we are saving them as strings (e.g. "HH:mm AM/PM")
   // when we receive object from DB, we will just display the string, 
   // if we want to order, we will convert to date object.
- 
+  const [startTime, setStartTime] = useState('01:00 AM');
+  const [error, setError] = useState<string | null>(null)
+  const [file, setFile] = useState<File | null>(null);
+  const [inputKey, setInputKey] = useState<number>(Date.now());
+  const [doorsOpenTime, setDoorsOpenTime] = useState('01:00 AM');
+
+  const handleStartTimeChange = (newTime: string) => {
+    setStartTime(newTime);
+    console.log("NEWEST Start TIME!!!!!!", startTime);
+  };
+
+  const handleDoorsOpenTimeChange = (newTime: string) => {
+    setDoorsOpenTime(newTime);
+    console.log("NEWEST Doors Open!!!!!!", doorsOpenTime);
+  };
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+
+    if (files) {
+      const uploadedFile = files[0];
+      const fileExtention = uploadedFile.name.split(".").pop()?.toLocaleLowerCase();
+
+      if (fileExtention === 'heic' || fileExtention === 'heif') {
+        setInputKey(Date.now());
+        setError('HEIC/HEIF images are not supported. Please upload a different file.')
+        setFile(null)
+      } else {
+        setError(null)
+        setFile(uploadedFile)
+      }
+    }
+  }
+
   const clientAction = async (formData: FormData) => {
     // await createEvent()
+    console.log("CLIENT ACTION")
     const newEvent = {
         title: formData.get("title") as string,
         date: new Date(formData.get("date") as unknown as Date),
@@ -31,53 +63,17 @@ export default function EventForm({user}: any) {
         ticket_price: formData.get("ticket_price") as string,
     }
 
-    // // // if there is an error, there will be message in result object
-    // const result = EventSchema.safeParse(newEvent);
-    // // console.log("CLIENT RESULT", result.data);
-    // console.log("HELLO!!!!")
+    console.log(newEvent)
 
-   
-
-    // console.log("RESULT DATA", result.data)
-    
-    // try {
-    //   console.log("TRY CATCH")
-    //   await createEvent(result.data)
-    //   // console.log("RESPONSE", response)
-    // } catch (error) {
-    //   console.error("error!!!!", error)
-    // }
-    // console.log("formData", formData)
-    // const result = EventSchema.parse(formData);
-    // console.log(result)
 
     const response = await createEvent(formData)
     console.log("RESPONSE!!", response);
     console.log("Hello")
 
-    //  if (!result.success) {
-    //   let errorMessage = "";
-
-    //   result.error.issues.forEach((issue) => {
-    //     errorMessage = errorMessage + issue.path[0] + ": " + issue.message + ". ";
-    //   })
-
-    //   console.log(result.error.issues)
-    //   // console.log(newEvent);
-    //   console.log("we shoujld get error toast")
-    //   toast.error(errorMessage)
-    //   return
-    // }
-
-    // const response = await createEvent(result.data)
-
     if (response?.error) {
       console.log("ERROR!!!!")
       toast.error(response.error)
     }
-    // console.log(" HELLO response")
-    // await axios.post("/api/event", {data: { ...result.data }})
-    // await createEvent(formData)
   } 
   return (
     <form action={clientAction} className="max-w-md mx-auto mt-8 px-6 py-8 bg-white shadow-md rounded-md flex flex-col items-start">
@@ -93,11 +89,13 @@ export default function EventForm({user}: any) {
       <label className="block mb-2 mt-2 font-bold">
         Start Time:
       </label>
-        <input type="time" name="start_time" className="form-input border p-2 mb-4 " required/>
+      <TimePicker onChange={handleStartTimeChange} />
+      <input type="hidden" name="start_time" value={startTime} />
       <label className="block mb-2 mt-2 font-bold">
         Doors Open:
       </label>
-        <input type="time" name="doors_open" className="form-input border p-2 mb-4 " required/>
+      <TimePicker onChange={handleDoorsOpenTimeChange} />
+      <input type="hidden" name="doors_open" value={doorsOpenTime} />
       <label className="block mb-2 mt-2 font-bold">
         Venue Name:
       </label>
@@ -111,8 +109,8 @@ export default function EventForm({user}: any) {
       <label className="block mb-2 mt-2 font-bold">
         Image Upload:
       </label>
-        <input type="file" name="image_url" accept="images/*" className="form-input border p-2 mb-4 " required/>
-
+        <input type="file" name="image_url" accept="images/*" className="form-input border p-2 mb-4 w-60" onChange={handleFileChange} key={inputKey} required/>
+        {error && <div style={{color: 'red'}}>{error}</div>}
       <label className="block mb-2 mt-2 font-bold">
         Ticket Link:
       </label>

@@ -1,9 +1,12 @@
 import { prisma } from "@/db";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { Josefin_Sans } from 'next/font/google'
 import { ReactElement } from "react";
 import { POST } from "../api/auth/[...nextauth]/route";
 import { ApprovalStatus } from "@prisma/client";
+import { options } from "@/app/api/auth/[...nextauth]/options";
+import { DeleteOpenMicButton } from "../(components)/DeleteOpenMicButton";
 
 const doodle = Josefin_Sans({
   subsets: ['latin'],
@@ -56,38 +59,7 @@ export default async function OpenMic() {
   // hoppy house
   // 
 
-  // const signupTime = new Date()
-  // const startTime = new Date()
-  // startTime.setHours(19, 30, 0, 0)
-  // signupTime.setHours(18, 0, 0, 0)
-
-  // await prisma.openMic.create({
-  //   data: {
-  //     title: "Tap Yard",
-  //     address: "1610 automotive way",
-  //     signupTime: signupTime,
-  //     startTime: startTime,
-  //     city: "Morrisville",
-  //     info: "5min sets",
-  //     frequency: "weekly",
-  //     day: "Friday"
-  //   }
-  // })
-
-  // await prisma.openMic.update({
-  //   where: { id: 4},
-  //   data: {
-  //       title: "House of Art",
-  //     address: "306 E Hargett St",
-  //     signupTime: signupTime,
-  //     startTime: startTime
-  //   }
-  // })
-
-
-
-  // await prisma.event.deleteMany({})
-
+  const session = await getServerSession(options)
   const weekDays: DayOfWeekSchedule = {}
 
 
@@ -134,6 +106,20 @@ export default async function OpenMic() {
     return "--"
   }
 
+  const renderDeleteButton = (openMicId: number) => {
+    if (!session) {
+      return ""
+    }
+
+    if (session.user.role === "ADMIN") {
+      return (
+        <DeleteOpenMicButton openMicId={openMicId}/>
+      )
+    }
+    return null;
+  }
+ 
+
   return (
     <>
       <div className="flex flex-col justify-center items-center m-0 m-h-screen mb-10">
@@ -160,6 +146,7 @@ export default async function OpenMic() {
                           <p className="mb-2">Frequency: {openMic.frequency}</p>
                           <p className="bg-white text-black p-2 rounded">Info: {openMic.info}</p>
                         </div>
+                        <DeleteOpenMicButton openMicId={openMic.id}/>
                       </li>
                     )
                   })}

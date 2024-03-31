@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { prisma } from "@/db";
 import ShowCard from './ShowCard';
 import { Josefin_Sans } from 'next/font/google'
+import { ApprovalStatus } from '@prisma/client';
 
 const doodle = Josefin_Sans({
   subsets: ['latin'],
@@ -11,27 +12,37 @@ const doodle = Josefin_Sans({
 
 export default async function UpcomingShows() {
   // grab the first 8 events to display
-  const events = await prisma.event.findMany({ 
-    take: 8, 
+  // const events = await prisma.event.findMany({ 
+  //   take: 8, 
+  //   orderBy: { date: 'asc' } 
+  // })
+
+  const events = await prisma.event.findMany({
+    where: {
+      approvalStatus: ApprovalStatus.APPROVED
+    },
+    take: 8,
     orderBy: { date: 'asc' } 
   })
   
-  const addTimeStringToDate = (date: Date, timeString: String) => {
+  const addTimeStringToDate = (date: Date, timeString: String): Date => {
     const [hours, minutes] = timeString.split(":").map(Number);
+    console.log("This is events time:", date.getTime());
+    const newDate = new Date(date.getTime());
 
-    date.setHours(hours)
-    date.setMinutes(minutes)
-    return date
-
+    newDate.setUTCHours(hours, minutes, 0, 0)
+    return newDate
   }
 
   const eventsWithTime = events.map((event) => {
     // map through the events and add start time to date object
-    addTimeStringToDate(event.date, event.start_time)
-    return event
+    // const eventDate = (event.date instanceof Date) ? event.date : new Date(event.date);
+    const eventDate = new Date(event.date); 
+    const newDate = addTimeStringToDate(eventDate, event.start_time);
+    return { ...event, date: newDate };
   })
 
-  const orderedEvents = await eventsWithTime.sort((a, b) => a.date.getTime() - b.date.getTime());
+  const orderedEvents = eventsWithTime.sort((a, b) => a.date.getTime() - b.date.getTime());
   // console.log(events)
   return (
     <>

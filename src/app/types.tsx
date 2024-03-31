@@ -45,7 +45,7 @@ export const EventSchema = z.object({
   venue_name: z.string(),
   address: z.string(),
   image_url: z.custom<File>(),
-  ticket_url: z.string().optional(),
+  ticket_link: z.string().optional(),
   ticket_price: z.string().optional(),
   description: z.string().trim().min(10, {
     message: "Description must at least be 10 chararcters long."
@@ -81,7 +81,23 @@ export const OpenMicSchema = z.object({
     message: "Info must be at least 10 characters"
   }),
   signupForm: z.string(),
+}).refine(data => {
+  const signupTime = data.signupTime;
+  const startTime = data.startTime;
+
+  if (signupTime) {
+    if (signupTime.length > 1) {
+      return startTime >= signupTime;
+    }
+  }
+}, {
+  message: "Start Time can't be before Signup time.",
+  "path": ["start_time"]
 })
+
+// there is an error saying ^^^. must fix validation?
+// actually get rid of open mic creation
+// only allow events to be created.
 
 export type Event = z.infer<typeof EventSchema>
 
